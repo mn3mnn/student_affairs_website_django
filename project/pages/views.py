@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from .models import Student
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -36,23 +36,45 @@ def Add_Student(request):
     return render(request, 'pages/Add Student.html', x)
 
 
+def update_student_information(request):
+    if request.method == 'POST':
+        id_of_collage = request.POST.get('id')
+        if id_of_collage:  # if the id is not None
+            try:
+                student = Student.objects.get(idoCollage=id_of_collage) # throw exception if there is no student with this ID
+                # check if the user want to delete the student or update his information
+                if request.POST.get('action') == 'Delete Student':  # delete the student
+                    student.delete()
+                    messages.add_message(request, messages.SUCCESS, 'The account has been successfully deleted.')
+                    return redirect(to='Update Student Information')
 
-def Update_Student_Information(request):
-    idoCollage = request.POST.get('id')
-    found_object = None
+                elif request.POST.get('action') == 'Update Student':  # update the student information
+                    if request.POST.get('name'):
+                        student.name = request.POST.get('name')
+                    if request.POST.get('level'):
+                        student.level = request.POST.get('level')
+                    if request.POST.get('department'):
+                        student.department = request.POST.get('department')
+                    if request.POST.get('dob'):
+                        student.dob = request.POST.get('dob')
+                    if request.POST.get('gpa'):
+                        student.gpa = request.POST.get('gpa')
+                    if request.POST.get('status'):
+                        student.status = True if request.POST.get('status') == 'active' else False
+                    if request.POST.get('email'):
+                        student.email = request.POST.get('email')
+                    if request.POST.get('mobile'):
+                        student.mobile = request.POST.get('mobile')
+                    student.save()
 
-    for obj in Student.objects.all():
-        if obj.idoCollage == idoCollage:
-            found_object = obj
-            break
+                    messages.add_message(request, messages.SUCCESS, 'The account has been successfully updated.')
+                    return redirect(to='Update Student Information')
 
-    if not found_object:
-        x = {'name': 'Not Found.'}
-    else:
-        x = {'name': 'Found.'}
+            except Student.DoesNotExist:
+                messages.add_message(request, messages.ERROR, 'There is no student with this ID.')
+                return redirect(to='Update Student Information')
 
-    return render(request, 'pages/Update Student Information.html', x)
-
+    return render(request, 'pages/Update Student Information.html')
 
 
 def Assign_Department_Page(request):

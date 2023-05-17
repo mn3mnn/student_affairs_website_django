@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search for Students</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/Search For Students.css' %}">
+</head>
+<body>
+
+
+
+  <div class="container">
+    <h1>Search For Student</h1>
+  <main>
+    <form id="SearchForStudent" method="POST">
+      {% csrf_token %}
+      <div>
+        <label class="id">ID</label>
+        <br>
+        <input type="text" id="id" name="id" placeholder="Enter ID">
+      </div>
+      <input id="Search" value="Search" type="submit">
+      
+    </form>
+    <div class="result">
+      {% if student %}
+          <p>Name: {{ student.name }}</p>
+          <p>ID: {{ student.idoCollage }}</p>
+          <p>GPA: {{ student.gpa }}</p>
+          <p>BirthDate: {{ student.dob }}</p>
+          <p>Gender: {{ student.gender }}</p>
+          <p>Level: {{ student.level }}</p>
+          <p>Status: {{ student.status }}</p>
+          <p>Email: {{ student.email }}</p>
+          <p>Mobile: {{ student.mobile }}</p>
+      {% elif error_message %}
+          <p>{{ error_message }}</p>
+      {% endif %}
+  </div>
+  
+  </main>
+  </div>
+
+</body>
+</html>
+
+
+<script>
+  
+  function checkText() {
+    document.getElementsByClassName("result")[0].innerHTML = "";
+    
+		let id = document.getElementById("id").value;
+		
+    let student = localStorage.getItem(id);
+
+    if(student === null) {
+			alert("thier is no student with this id.");
+		}
+    else{
+      let studentObj = JSON.parse(student);
+      document.getElementsByClassName("result")[0].innerHTML += "Name: " + studentObj.Name + "<br>"+ "ID: " + studentObj.id + "<br>" + "gpa: " + studentObj.gpa + "<br>"+ "BirthDate:" + studentObj.dob + "<br>" + "Gender:" + studentObj.gender + "<br>" + "Level:" + studentObj.level + "<br>" + "Status:" + studentObj.status + "<br>" + "email:" +studentObj.email + "<br>" + "mobile:" + studentObj.mobile;
+
+    }
+  }
+
+    
+</script>
+
+{% endblock content %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Students</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/Inactive Students Page.css' %}">
+</head>
+<body>
+
+
+<main>
+    <div class="container">
+      <h1>Choose to View Active or Inactive Students</h1>
+        <form id="inactiveStudentsForm" method="POST">
+          {% csrf_token %}
+            <select name="status" id="status">
+                <option disabled selected>Select Status</option>
+                <option value="active">Active Students</option>
+                <option value="inactive">Inactive Students</option>
+            </select>
+            <input id="submit" value="Submit" type="submit">
+
+            <table id ="table1">
+              <thead>
+              <tr>
+                  <th>Student ID</th>
+                  <th>Student Name</th>
+                  <th>Student Department</th>
+                  <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.idoCollage }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.department }}</td>
+                    <td>{{ student.status }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </form>
+        
+    </div>
+</main>
+
+</body>
+</html>
+
+<script>
+  function addrow(){
+    var rows = document.getElementsByTagName("tr");
+    for (var i = 1; i < rows.length; i++){
+      rows[i].remove();
+    }
+    let data = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      let value = JSON.parse(localStorage.getItem(key));
+      data.push(value);
+    }
+
+        
+    let table = document.getElementById("table1");
+    for (let i = 0; i < data.length; i++) {
+      if(data[i].status === document.getElementById("status").value){
+        let newRow = document.createElement("tr");
+        let cell1 = "<td>" + data[i].id + "</td>";
+        let cell2 = "<td>" + data[i].Name + "</td>";
+        let cell4 = "<td>" + data[i].department + "</td>";
+        let cell3 = "<td>" + data[i].status + "</td>";
+          
+        newRow.innerHTML = cell1 + cell2 + cell4 + cell3 ;
+            
+        table.getElementsByTagName("tbody")[0].appendChild(newRow);
+      }
+      
+
+    }
+
+  }
+
+</script>
+{% endblock content %}

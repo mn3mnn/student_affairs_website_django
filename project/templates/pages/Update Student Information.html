@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<html>
+<head>
+  <title>Update Student | Student Affairs Website</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/Add.css' %}">
+</head>
+<body>
+
+
+<div class="container">
+  <h1>Update Student Information</h1>
+  <form id="updateStudentForm" method="POST">
+      {% csrf_token %}
+
+      <label >ID</label>
+      <input type="text" id="id"  name="id" placeholder="Enter ID" required>
+
+
+
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter Name" required>
+
+
+      <label >Date of Birth</label>
+      <input type="date" id="dob"  name="dob" class="Disabled" disabled>
+
+      <label >GPA</label>
+      <input type="text" id="gpa" name="gpa" placeholder="Enter GPA" class="Disabled" disabled>
+
+      <label >Gender</label>
+      <select id="gender" name="gender" class="Disabled" disabled>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <label >Level</label>
+      <input id="level" type="number" max="4" min="1" name="level" class="Disabled" placeholder="Enter Level" disabled>
+
+      <label>Status</label>
+      <select id="status" name="status" class="Disabled" disabled>
+        <option value="">Select Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+
+      <label class="department">Department</label>
+      <select id="department" id="department" name="department" class="Disabled" disabled>
+        <option disabled selected>Select Department</option>
+            <option value="CS">CS</option>
+            <option value="IS">IS</option>
+            <option value="IT">IT</option>
+            <option value="AI">AI</option>
+            <option value="DS">DS</option>
+      </select>
+
+      <label class="email">Email</label>
+      <input id="email" type="email" name="email" placeholder="Enter Email" class="Disabled" disabled>
+
+      <label >Mobile Number</label>
+      <input id="mobile" type="tel" name="mobile" placeholder="Enter Mobile Number" class="Disabled" disabled>
+
+    <div class="button">
+        <input onclick="checkButtonClick()" type="submit" id="submit" value="Update Student">
+        <input onclick="deletestu()" id="delet" value="Delete student" type="submit" disabled>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
+
+
+<script>
+
+  function checkButtonClick() {
+    if (typeof checkButtonClick.counter == 'undefined') {
+      checkButtonClick.counter = 1;
+      showDiv();
+    }
+    else {
+      updateStudent();
+    }
+  }
+
+  function showDiv() {
+    if(checkText() === true){
+        let divs = document.getElementsByClassName("Disabled");
+        for (let i = 0; i < divs.length; i++) {
+          divs[i].disabled = false;
+        }
+        document.getElementById("id").disabled = true;
+        document.getElementById("name").disabled = true;
+    }
+    else{
+      alert("this id is not valid.");
+    }
+  }
+
+  function checkText(){
+
+      return 'Found.' === '{{ name }}';
+
+
+
+
+    {#let name = document.getElementById("name").value;#}
+    {#let student = JSON.parse(localStorage.getItem(id));#}
+    {#if((student.id === id) && (student.Name === name)) {#}
+    {#  document.getElementById("dob").value = student.dob;#}
+    {#  document.getElementById("gpa").value = student.gpa;#}
+    {#  document.getElementById("gender").value = student.gender;#}
+    {#  document.getElementById("level").value = student.level;#}
+    {#  document.getElementById("status").value = student.status;#}
+    {#  document.getElementById("department").value = student.department;#}
+    {#  document.getElementById("email").value = student.email;#}
+    {#  document.getElementById("mobile").value = student.mobile;#}
+    {#  return true;#}
+
+    {#return false;#}
+  }
+
+  let student = {
+    id:"",
+    Name: "",
+    dob: "",
+    gpa: "",
+    gender:"",
+    level: "",
+    status: "",
+    email: "",
+    mobile: ""
+  };
+
+  function Student(id,Name,dob,gpa,gender,level,status,email,mobile){
+    this.id = id;
+    this.Name = Name;
+    this.dob = dob;
+    this.gpa = gpa;
+    this.gender = gender;
+    this.level = level;
+    this.status = status;
+    this.email = email;
+    this.mobile = mobile;
+  }
+
+  function updateStudent(){
+
+    let id = document.getElementById('id').value;
+    let name = document.getElementById('name').value;
+    let dob = document.getElementById('dob').value;
+    let gpa = document.getElementById('gpa').value;
+    let gender = document.getElementById('gender').value;
+    let level = document.getElementById('level').value;
+    let status = document.getElementById('status').value;
+    let email = document.getElementById('email').value;
+    let mobile = document.getElementById('mobile').value;
+
+    let student = new Student(id,name,dob,gpa,gender,level,status,email,mobile);
+
+    student.Name = name;
+    student.dob = dob;
+    student.gpa = gpa;
+    student.gender = gender;
+    student.level = level;
+    student.status = status;
+    student.email = email;
+    student.mobile = mobile;
+
+    let studentStr = JSON.stringify(student);
+    localStorage.setItem(id, studentStr);
+    document.location.reload();
+    alert("Student Information Updated Successfully!");
+
+  }
+
+
+
+
+  function deletestu(){
+    // Check if the item exists in the local storage
+    if (localStorage.getItem(document.getElementById("id").value)) {
+      // Remove the item from the local storage
+      localStorage.removeItem(document.getElementById("id").value);
+      document.location.reload();
+      alert("Student Deleted Successfully!");
+    }
+  }
+
+</script>
+{% endblock content %}
+

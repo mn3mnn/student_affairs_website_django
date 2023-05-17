@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View All Students</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/View All Students.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>View All Students</h1>
+    <main>
+        <table id="table1">
+            <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Student Department</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.idoCollage }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.department }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>
+
+
+<script>
+    
+</script>
+
+{% endblock content %}

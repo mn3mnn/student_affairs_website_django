@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Department</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/Assign Department Page.css' %}">
+</head>
+
+
+<body>
+
+<main>
+  <div class="container">
+    <h1>Enter Student ID and Department Information</h1>
+    <form id="assignDepForm" method="POST">
+      {% csrf_token %}
+      <label for="student-id">Student ID:</label>
+      <input type="text" id="student-id" name="student-id" placeholder="Enter Student ID" required>
+
+      
+      <label for="department-name">Department Name:</label>
+      <br>
+      <select name="department-name" id="department-name">
+        <option disabled selected>Select Department</option>
+        <option value="CS">CS</option>
+        <option value="IS">IS</option>
+        <option value="IT">IT</option>
+        <option value="AI">AI</option>
+        <option value="DS">DS</option>
+      </select>
+      <input onclick="onClick()" id="submit" value="Assign Department" type="submit">
+
+    </form>
+  </div>
+</main>
+
+
+<script>
+    function onClick(){
+        alert("{{ message }}")
+    }
+
+</script>
+  
+
+
+</body>
+</html>
+{% endblock content %}

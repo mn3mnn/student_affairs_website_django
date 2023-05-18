@@ -63,16 +63,16 @@ select {
     font-size: 1rem;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: 40%; /* reduce width to align with other inputs */
+    width: 40%; 
     margin-top: 10px;
     margin-bottom: 30px;
     font-size: 16px;
     color: #747474;
 }
 
-input[type="submit"] {
+#submit {
     margin: 30px 50px;
-    background-color:#45a049;
+    background-color: #40b046;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -82,9 +82,10 @@ input[type="submit"] {
     transition: background-color 0.2s;
 }
 
-input[type="submit"]:hover {
+#submit:hover {
     background-color: #555;
 }
+
 
 .result {
     background-color: #fff;

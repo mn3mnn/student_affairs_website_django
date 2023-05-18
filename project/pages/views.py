@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from .models import Student
+from django.http import JsonResponse
 from django.contrib import messages
 
 # Create your views here.
@@ -149,4 +150,5 @@ def View_All_Students(request):
     students = Student.objects.all()
     context = {'students': students}
     return render(request, 'pages/View All Students.html', context)
+
 

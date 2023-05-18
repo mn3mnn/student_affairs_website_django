@@ -5,7 +5,7 @@
 }
 
 .or{
-    margin-left: -40px;
+    margin-left: -45px;
     font-weight: 300;
 }
 
@@ -19,7 +19,7 @@ body {
 
 .container {
     margin: 20px auto;
-    width: 50%;
+    width: 76%;
     background-color: #fff;
     padding: 30px 50px;
     border-radius: 10px;
@@ -73,7 +73,26 @@ button[type="button"]:hover {
 .result {
     background-color:#f4f4f4;
     border-radius: 5px;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    height: 200px;
+    height: 250px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 40px;
+}
+
+th {
+    font-weight: bold;
+    text-align: left;
+    background-color: #00b3ff;
+    color: #fff;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #ccc;
 }

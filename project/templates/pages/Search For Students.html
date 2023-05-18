@@ -25,24 +25,40 @@
         <br>
         <input type="text" id="id" name="id" placeholder="Enter ID">
       </div>
-      <input id="Search" value="Search" type="submit">
-      
+      <input id="Search" value="Search" type="submit" style="margin: 30px 50px; background-color: #45a049; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#555'" onmouseout="this.style.backgroundColor='#45a049'">
     </form>
     <div class="result">
       {% if student %}
-          <p>Name: {{ student.name }}</p>
-          <p>ID: {{ student.idoCollage }}</p>
-          <p>GPA: {{ student.gpa }}</p>
-          <p>BirthDate: {{ student.dob }}</p>
-          <p>Gender: {{ student.gender }}</p>
-          <p>Level: {{ student.level }}</p>
-          <p>Status: {{ student.status }}</p>
-          <p>Email: {{ student.email }}</p>
-          <p>Mobile: {{ student.mobile }}</p>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>GPA</th>
+            <th>BirthDate</th>
+            <th>Gender</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>Mobile</th>
+          </tr>
+          <tr>
+            <td>{{ student.name }}</td>
+            <td>{{ student.idoCollage }}</td>
+            <td>{{ student.gpa }}</td>
+            <td>{{ student.dob }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.level }}</td>
+            <td>{{ student.status }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.mobile }}</td>
+          </tr>
+        </table>
       {% elif error_message %}
-          <p>{{ error_message }}</p>
+        <p>{{ error_message }}</p>
       {% endif %}
-  </div>
+    </div>
+    
+    
   
   </main>
   </div>

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from .models import Student
 from django.contrib import messages
+from django.http import JsonResponse
+from django.core import serializers
 
 # Create your views here.
 
@@ -43,12 +45,19 @@ def update_student_information(request):
             try:
                 student = Student.objects.get(idoCollage=id_of_collage) # throw exception if there is no student with this ID
                 # check if the user want to delete the student or update his information
-                if request.POST.get('action') == 'Delete Student':  # delete the student
-                    student.delete()
-                    messages.add_message(request, messages.SUCCESS, 'The account has been successfully deleted.')
-                    return redirect(to='Update Student Information')
 
-                elif request.POST.get('action') == 'Update Student':  # update the student information
+                if request.POST.get('action') == 'delete':  # delete the student
+                    student.delete()
+                    return JsonResponse({"msg": "The account has been successfully deleted."}, status=200)
+
+                elif request.POST.get('action') == 'update':  # update the student information
+                    if request.POST.get('isSearch') == 'true':
+                        # serialize in new student object in json
+                        ser_instance = serializers.serialize('json', [student, ])
+                        # send to client side.
+                        print('is search is true')
+                        return JsonResponse({"std": ser_instance}, status=200)
+                    # else update student data
                     if request.POST.get('name'):
                         student.name = request.POST.get('name')
                     if request.POST.get('level'):
@@ -67,12 +76,10 @@ def update_student_information(request):
                         student.mobile = request.POST.get('mobile')
                     student.save()
 
-                    messages.add_message(request, messages.SUCCESS, 'The account has been successfully updated.')
-                    return redirect(to='Update Student Information')
+                    return JsonResponse({"msg": 'The account has been successfully updated.'}, status=200)
 
             except Student.DoesNotExist:
-                messages.add_message(request, messages.ERROR, 'There is no student with this ID.')
-                return redirect(to='Update Student Information')
+                return JsonResponse({"msg": 'There is no student with this ID.'}, status=400)
 
     return render(request, 'pages/Update Student Information.html')
 

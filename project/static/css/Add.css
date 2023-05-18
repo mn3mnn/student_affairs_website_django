@@ -72,6 +72,16 @@ select {
   color: #747474;
 }
 
+.ele{
+    width: 30%;
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #747474;
+}
+
 #submit,
 #delet {
     background-color: #45a049;
@@ -96,7 +106,7 @@ select {
 }
 
 #delet{
-    background-color: #ff0000;
+    background-color: #000000;
     color: #fff;
     border: none;
     display: inline-block;

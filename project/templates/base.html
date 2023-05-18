@@ -1,15 +1,22 @@
-{% load static%}
+{% load static %}
 
 
 <head>
-
+    {% block style %}
+    {% endblock style %}
     {% comment %}
     <link rel="shortcut icon" href="{% url 'static/image/png.png' %}" type="image/png">
     {% endcomment %}
 </head>
 
-
 {% include 'partes/navbar.html'%}
 {% block content%}
 {% endblock content%}
 {% include 'partes/footer.html'%}
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    {% block javascript %}
+    {% endblock javascript %}
+</body>

@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <head>
     {% block style %}
     {% endblock style %}
@@ -10,6 +9,8 @@
     {% comment %}
     <link rel="shortcut icon" href="{% url 'static/image/png.png' %}" type="image/png">
     {% endcomment %}
+    <link rel="icon" href="{% static 'image/sec.png' %}" type="image/png">
+
 </head>
 
 {% include 'partes/navbar.html'%}

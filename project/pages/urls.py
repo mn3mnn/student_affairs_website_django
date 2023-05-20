@@ -10,6 +10,6 @@ urlpatterns = [
     path('SearchForStudents', views.Search_For_Students, name='Search For Students'),
     path('UpdateStudentInformation', views.update_student_information, name='Update Student Information'),
     path('ViewAllStudents', views.View_All_Students, name='View All Students'),
-    
+    path('ChangeStudentStatus', views.change_student_status, name='Change Student Status'),
 
 ]

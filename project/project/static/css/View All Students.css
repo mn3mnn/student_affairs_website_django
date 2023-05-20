@@ -56,22 +56,33 @@ td {
 }
 
 .active-btn {
-    background-color: #28a745;
+    background-color: #45a049;
+    color: #fff;
+    border: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 60%;
+}
+
+.active-btn:hover {
+    background-color: #269f42;
 }
 
 .inactive-btn {
-    background-color: #dc3545;
+   background-color: #f44336;
+    color: #fff;
+    border: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 60%;
+
 }
 
-td button:active {
-    transform: translateY(2px);
-}
-
-td button:focus {
-    outline: none;
-}
-
-td button[disabled] {
-    cursor: not-allowed;
-    opacity: 0.5;
-}

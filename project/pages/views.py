@@ -56,7 +56,6 @@ def update_student_information(request):
                         # serialize in new student object in json
                         ser_instance = serializers.serialize('json', [student, ])
                         # send to client side.
-                        print('is search is true')
                         return JsonResponse({"std": ser_instance}, status=200)
                     # else update student data
                     if request.POST.get('name'):
@@ -83,6 +82,24 @@ def update_student_information(request):
                 return JsonResponse({"msg": 'There is no student with this ID.'}, status=400)
 
     return render(request, 'pages/Update Student Information.html')
+
+
+def change_student_status(request):
+    if request.method == 'POST':
+        id_of_collage = request.POST.get('std_id')
+        if id_of_collage:
+            std = Student.objects.get(idoCollage=id_of_collage)
+            if std:
+                curr_status = std.status
+                std.status = not curr_status
+                std.save()
+                return JsonResponse({"msg": 'The status has been successfully updated.',
+                                     "new_status": 'active' if std.status else 'inactive',
+                                     "old_status": 'active' if curr_status else 'inactive'}, status=200)
+            else:
+                return JsonResponse({"msg": 'There is no student with this ID.'}, status=400)
+
+    return render(request, 'pages/Change Student Status.html')
 
 
 def Assign_Department_Page(request):

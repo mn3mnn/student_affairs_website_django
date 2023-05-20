@@ -30,10 +30,19 @@
                     <td>{{ student.idoCollage }}</td>
                     <td>{{ student.name }}</td>
                     <td>{{ student.department }}</td>
-                    <td>{{ student.status }}</td>
-                    <td>
-                        
-                    </td>
+                    {% if student.status %}
+                        <td id="{{ student.idoCollage}}status">Active</td>
+                        <td>
+                            {% csrf_token %}
+                            <input type="button" id="{{ student.idoCollage }}btn" onclick="changeStdStatus({{ student.idoCollage }})" class="inactive-btn" value="Make Inactive">
+                        </td>
+                    {% else %}
+                        <td id="{{ student.idoCollage }}status">Inactive</td>
+                        <td>
+                            {% csrf_token %}
+                            <input type="button" id="{{ student.idoCollage}}btn" onclick="changeStdStatus({{ student.idoCollage }})" class="active-btn" value="Make Active">
+                        </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -49,3 +58,50 @@
 </script>
 
 {% endblock content %}
+
+{% block javascript %}
+{#<script src="{% static 'js/View All Students.js' %}"></script>#}
+<script>
+function changeStdStatus(std_id) {
+  var csrftoken = getCookie('csrftoken');
+
+  $.ajax({
+    type: "POST",
+    url: "{% url 'Change Student Status' %}",
+    data: {
+      std_id: std_id
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    },
+    success: function(response) {
+      console.log(response);
+        response["old_status"] = response["old_status"].charAt(0).toUpperCase() + response["old_status"].slice(1);
+        response["new_status"] = response["new_status"].charAt(0).toUpperCase() + response["new_status"].slice(1);
+      $("#" + std_id + "status").text(response["new_status"]);
+      $("#" + std_id + "btn").attr("class", response["old_status"] + "-btn").val("Make " + response["old_status"]);
+    },
+    error: function(response) {
+      console.log(response);
+    }
+  });
+}
+
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+</script>
+{% endblock javascript %}
+

@@ -48,7 +48,7 @@
             <td>{{ student.dob }}</td>
             <td>{{ student.gender }}</td>
             <td>{{ student.level }}</td>
-            <td>{{ student.status }}</td>
+            <td>{% if student.status %} Active {% else %}Inactive {% endif %}</td>
             <td>{{ student.email }}</td>
             <td>{{ student.mobile }}</td>
           </tr>

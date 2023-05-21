@@ -20,7 +20,7 @@
         <form id="inactiveStudentsForm" method="POST">
           {% csrf_token %}
             <select name="status" id="status">
-                <option disabled selected>Select Status</option>
+                <option disabled selected value="">Select Status</option>
                 <option value="active">Active Students</option>
                 <option value="inactive">Inactive Students</option>
             </select>
@@ -44,7 +44,7 @@
 <script>
 
     function validateForm() {
-        let x = document.forms["inactiveStudentsForm"]["status"].value;
+        let x = document.getElementById("status").value;
         if (!x) {
             alert("Please Select Status");
             return false;

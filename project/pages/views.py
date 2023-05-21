@@ -123,30 +123,29 @@ def Assign_Department_Page(request):
     return render(request, 'pages/Assign Department Page.html', x)
 
 
-
-
-
 def Home(request):
     return render(request, 'pages/Home.html')
-
-
 
 
 def Inactive_Students_Page(request):
     if request.method == 'POST':
         status = request.POST.get('status')
-
+        students = None
         if status == 'active':
             students = Student.objects.filter(status=True)
+
         elif status == 'inactive':
             students = Student.objects.filter(status=False)
 
-    else:
-        students = Student.objects.filter(status=None)
-    
-    context = {'students': students}
+        if students:
+            # serialize in new student object in json
+            ser_instance = serializers.serialize('json', students)
+            # send to client side.
+            return JsonResponse({"std": ser_instance}, status=200)
+        else:
+            return JsonResponse({"msg": 'There is no student with this status.'}, status=400)
 
-    return render(request, 'pages/Inactive Students Page.html', context)
+    return render(request, 'pages/Inactive Students Page.html')
 
 
 def Search_For_Students(request):

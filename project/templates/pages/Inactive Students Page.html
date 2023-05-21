@@ -14,9 +14,9 @@
 <body>
 
 
-<main>
+  <main>
     <div class="container">
-      <h1>Choose to View Active or Inactive Students</h1>
+        <h1>Choose to View Active or Inactive Students</h1>
         <form id="inactiveStudentsForm" method="POST">
           {% csrf_token %}
             <select name="status" id="status">
@@ -24,29 +24,17 @@
                 <option value="active">Active Students</option>
                 <option value="inactive">Inactive Students</option>
             </select>
-            <input id="submit" value="Submit" type="submit" style="margin: 30px 50px; background-color: #45a049; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#555'" onmouseout="this.style.backgroundColor='#45a049'">
-            <table id ="table1">
-              <thead>
+            <input id="submit" value="Submit" onclick="getStudents()" style="margin: 30px 50px; background-color: #45a049; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#555'" onmouseout="this.style.backgroundColor='#45a049'">
+        </form>
+
+        <table id="std-table">
               <tr>
                   <th>Student ID</th>
                   <th>Student Name</th>
                   <th>Student Department</th>
                   <th>Status</th>
               </tr>
-              </thead>
-              <tbody>
-                {% for student in students %}
-                <tr>
-                    <td>{{ student.idoCollage }}</td>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.department }}</td>
-                    <td>{{ student.status }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-        </form>
-        
+        </table>
     </div>
 </main>
 
@@ -54,37 +42,56 @@
 </html>
 
 <script>
-  function addrow(){
-    var rows = document.getElementsByTagName("tr");
-    for (var i = 1; i < rows.length; i++){
-      rows[i].remove();
-    }
-    let data = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      let value = JSON.parse(localStorage.getItem(key));
-      data.push(value);
-    }
 
-        
-    let table = document.getElementById("table1");
-    for (let i = 0; i < data.length; i++) {
-      if(data[i].status === document.getElementById("status").value){
-        let newRow = document.createElement("tr");
-        let cell1 = "<td>" + data[i].id + "</td>";
-        let cell2 = "<td>" + data[i].Name + "</td>";
-        let cell4 = "<td>" + data[i].department + "</td>";
-        let cell3 = "<td>" + data[i].status + "</td>";
-          
-        newRow.innerHTML = cell1 + cell2 + cell4 + cell3 ;
-            
-        table.getElementsByTagName("tbody")[0].appendChild(newRow);
+    function validateForm() {
+        let x = document.forms["inactiveStudentsForm"]["status"].value;
+        if (!x) {
+            alert("Please Select Status");
+            return false;
+        }
+        return true;
       }
-      
 
+    function getStudents(){
+        if (! validateForm()){
+            return false;
+        }
+        $.ajax({
+            url: "{% url 'Inactive Students Page' %}",
+            type: "POST",
+            data: {
+                'status': document.getElementById("status").value,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            success: function (data) {
+                if(data['std']){
+                    if ($("#std-table").find("tr").length > 1) { // remove all rows except the first one
+                        $("#std-table").find("tr:gt(0)").remove();
+                    }
+
+                    let std = JSON.parse(data["std"]);
+                    for (let i = 0; i < std.length; i++){
+                        let std_status = "";
+                        if (std[i]["fields"]["status"] === "True") {
+                            std_status = "Active";
+                        } else {
+                            std_status = "Inactive";
+                        }
+                        $("#std-table").append("<tr>"+
+                                            "<td>"+std[i]["fields"]["idoCollage"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["name"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["department"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["status"]+"</td>"+
+                                          "</tr>");
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data["msg"]);
+            }
+        });
     }
-
-  }
 
 </script>
 {% endblock content %}

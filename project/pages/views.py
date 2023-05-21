@@ -149,25 +149,36 @@ def Inactive_Students_Page(request):
     return render(request, 'pages/Inactive Students Page.html', context)
 
 
-
-
 def Search_For_Students(request):
     if request.method == 'POST':
         student_id = request.POST.get('id')
-        try:
-            student = Student.objects.filter(idoCollage=student_id).first()
-            if student:
-                context = {'student': student}
-            else:
-                context = {'error_message': "There is no student with this ID."}
-        except Student.DoesNotExist:
-            context = {'error_message': "There is no student with this ID."}
-    else:
-        context = {}
+        student_name = request.POST.get('name')
 
-    return render(request, 'pages/Search For Students.html',context)
+        if student_id:  # search by id if it is not None
+            try:
+                student = Student.objects.get(idoCollage=student_id)
+                if student:
+                    # serialize in new student object in json
+                    ser_instance = serializers.serialize('json', [student, ])
+                    # send to client side.
+                    return JsonResponse({"std": ser_instance}, status=200)
 
+            except Student.DoesNotExist:
+                return JsonResponse({"msg": 'No student with this ID.'}, status=400)
 
+        elif student_name:  # search by name if the id is None and the name is not None
+            try:
+                students = Student.objects.filter(name__contains=student_name)
+                if students:
+                    # serialize in new student object in json
+                    ser_instance = serializers.serialize('json', students)
+                    # send to client side.
+                    return JsonResponse({"std": ser_instance}, status=200)
+
+            except Student.DoesNotExist:
+                return JsonResponse({"msg": 'No students with this name.'}, status=400)
+
+    return render(request, 'pages/Search For Students.html')
 
 
 def View_All_Students(request):

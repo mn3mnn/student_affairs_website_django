@@ -134,7 +134,7 @@
                     $("#id").disabled = true; // disable the id field
                     $("#isSearch").val("false"); // set the isSearch value to false. to prevent searching again
                     // set the values of the form fields
-                    var std = JSON.parse(response["std"]);
+                    let std = JSON.parse(response["std"]);
                     $("#id").val(std[0]["fields"]["idoCollage"]);
                     $("#name").val(std[0]["fields"]["name"]);
                     $("#dob").val(std[0]["fields"]["dob"]);

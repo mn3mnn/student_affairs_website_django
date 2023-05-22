@@ -19,8 +19,8 @@ h1 {
 }
 
 .container {
-    margin: 50px auto;
-    width: 70%;
+    margin: 70px auto;
+    width: 50%;
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
@@ -43,31 +43,20 @@ form {
 
 label {
     font-size: 16px;
-    margin-bottom: 10px;
-    color: #555;
+  color: #555;
+  display: block;
+  width: 30%;
+  margin-bottom: 10px;
 }
-
+select,
 input[type="text"] {
-    width: 40%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    font-size: 16px;
-    color: #747474;
-}
-
-select {
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 40%; 
-    margin-top: 10px;
-    margin-bottom: 30px;
-    font-size: 16px;
-    color: #747474;
+    width: 30%;
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #747474;
 }
 
 #submit {

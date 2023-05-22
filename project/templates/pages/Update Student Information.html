@@ -43,8 +43,8 @@
       <label>Gender</label>
           <select id="gender" name="gender">
               <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
           </select>
       </div>
 
@@ -57,8 +57,8 @@
           <label>Status</label>
           <select id="status" name="status">
               <option value="">Select Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
           </select>
       </div>
 
@@ -105,11 +105,12 @@
     function showDivs() {
         let divs = document.getElementsByClassName("ele");
         for (let i = 0; i < divs.length; i++) {
-            divs[i].style.display = "block";
+            divs[i].style.display = "flex";
         }
     }
     function setActionVal(action) {
         $("#action").val(action);
+
     }
     /*
         On submitting the form, send the POST ajax
@@ -118,8 +119,10 @@
     $("#updateStudentForm").submit(function (e) {
         // preventing from page reload and default actions
         e.preventDefault();
+        $("#id").prop("disabled", false); // enable the id field to be sent with the form data
         // serialize the data for sending the form data.
         let serializedData = $(this).serialize();
+        console.log(serializedData);
         // make POST ajax call
         $.ajax({
             method: 'POST',
@@ -128,11 +131,11 @@
             success: function (response) {
                 // clear the form.
                 $("#updateStudentForm").trigger('reset');
-
+                $("#id").prop("disabled", true); // disable the id field to guarantee that it will not be changed
                 if (response["std"]){ // if the student is found
                     showDivs(); // show the rest of form fields and fill them with the data
-                    $("#id").disabled = true; // disable the id field
                     $("#isSearch").val("false"); // set the isSearch value to false. to prevent searching again
+
                     // set the values of the form fields
                     let std = JSON.parse(response["std"]);
                     $("#id").val(std[0]["fields"]["idoCollage"]);
@@ -142,11 +145,14 @@
                     $("#level").val(std[0]["fields"]["level"]);
                     $("#email").val(std[0]["fields"]["email"]);
                     $("#mobile").val(std[0]["fields"]["mobile"]);
-
-                    // set the selected option in the select fields
-                    
-
-
+                    $("#gender").val(std[0]["fields"]["gender"]);
+                    $("#department").val(std[0]["fields"]["department"]);
+                    if (std[0]["fields"]["status"]) {
+                        $("#status").val("1");
+                    }
+                    else {
+                        $("#status").val("0");
+                    }
                 }
                 else if (response["msg"]){ // else if the response has a msg. (student has been deleted or updated)
                     alert(response["msg"]);
@@ -155,8 +161,9 @@
             },
             error: function (response) { // if status code is not 200 (student not found)
                 // alert the error if any error occurred
-                alert(response["msg"]);
-                location.reload();
+                console.log(response);
+                alert(response["responseJSON"]["msg"]);
+                $("#updateStudentForm").trigger('reset');
             }
         })
     })

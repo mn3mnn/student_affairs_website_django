@@ -8,35 +8,42 @@ from django.core import serializers
 
 # Create your views here.
 
+
 def Add_Student(request):
-    name = request.POST.get('name')
-    idoCollage = request.POST.get('id')
-    dob = request.POST.get('dob')
-    gpa = request.POST.get('gpa')
-    gender = request.POST.get('gender')
-    status = request.POST.get('status')
-    department = request.POST.get('department')
-    email = request.POST.get('email')
-    mobile = request.POST.get('mobile')
-    level = request.POST.get('level')
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name')
+            idoCollage = request.POST.get('id')
+            dob = request.POST.get('dob')
+            gpa = request.POST.get('gpa')
+            gender = request.POST.get('gender')
+            status = request.POST.get('status')
+            department = request.POST.get('department')
+            email = request.POST.get('email')
+            mobile = request.POST.get('mobile')
+            level = request.POST.get('level')
 
-    found_object = None
+            found_object = None
 
-    for obj in Student.objects.all():
-        if obj.idoCollage == idoCollage:
-            found_object = obj
-            break
+            for obj in Student.objects.all():
+                if obj.idoCollage == idoCollage:
+                    found_object = obj
+                    break
 
-    if not found_object:
-        std = Student(name=name, idoCollage=idoCollage, level=level, department=department, gender=gender,
-                      status=status, dob=dob, gpa=gpa, email=email,
-                      mobile=mobile)
-        std.save()
-        x = {'name': 'The account is successfully added. '}
-    else:
-        x = {'name': 'Cannot add this Student,This ID is for another student.'}
+            if not found_object:
+                std = Student(name=name, idoCollage=idoCollage, level=level, department=department, gender=gender,
+                              status=status, dob=dob, gpa=gpa, email=email,
+                              mobile=mobile)
+                std.save()
+                return JsonResponse({"msg": 'The student has been added successfully.'}, status=200)
+            else:
+                return JsonResponse({"msg": 'There is another student with the same ID.'}, status=400)
 
-    return render(request, 'pages/Add Student.html', x)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"msg": 'Cannot add this Student.'}, status=400)
+
+    return render(request, 'pages/Add Student.html')
 
 
 def update_student_information(request):
@@ -53,10 +60,13 @@ def update_student_information(request):
 
                 elif request.POST.get('action') == 'update':  # update the student information
                     if request.POST.get('isSearch') == 'true':
+                        print('isSearch is true')
                         # serialize in new student object in json
                         ser_instance = serializers.serialize('json', [student, ])
                         # send to client side.
                         return JsonResponse({"std": ser_instance}, status=200)
+
+                    print('isSearch is false')
                     # else update student data
                     if request.POST.get('name'):
                         student.name = request.POST.get('name')
@@ -69,7 +79,7 @@ def update_student_information(request):
                     if request.POST.get('gpa'):
                         student.gpa = request.POST.get('gpa')
                     if request.POST.get('status'):
-                        student.status = True if request.POST.get('status') == 'active' else False
+                        student.status = True if request.POST.get('status') == '1' else False
                     if request.POST.get('email'):
                         student.email = request.POST.get('email')
                     if request.POST.get('mobile'):
@@ -78,7 +88,7 @@ def update_student_information(request):
 
                     return JsonResponse({"msg": 'The account has been successfully updated.'}, status=200)
 
-            except Student.DoesNotExist:
+            except Exception as e:
                 return JsonResponse({"msg": 'There is no student with this ID.'}, status=400)
 
     return render(request, 'pages/Update Student Information.html')

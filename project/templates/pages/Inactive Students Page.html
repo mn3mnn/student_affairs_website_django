@@ -16,7 +16,7 @@
 
   <main>
     <div class="container">
-        <h1>Choose to View Active or Inactive Students</h1>
+        <h1>View Active or Inactive Students</h1>
         <form id="inactiveStudentsForm" method="POST">
           {% csrf_token %}
             <select name="status" id="status">
@@ -73,7 +73,7 @@
                     let std = JSON.parse(data["std"]);
                     for (let i = 0; i < std.length; i++){
                         let std_status = "";
-                        if (std[i]["fields"]["status"] === "True") {
+                        if (std[i]["fields"]["status"]) {
                             std_status = "Active";
                         } else {
                             std_status = "Inactive";
@@ -82,7 +82,7 @@
                                             "<td>"+std[i]["fields"]["idoCollage"]+"</td>"+
                                             "<td>"+std[i]["fields"]["name"]+"</td>"+
                                             "<td>"+std[i]["fields"]["department"]+"</td>"+
-                                            "<td>"+std[i]["fields"]["status"]+"</td>"+
+                                            "<td>"+ std_status +"</td>"+
                                           "</tr>");
                     }
                 }

@@ -88,7 +88,7 @@
                     let std = JSON.parse(data["std"]);
                     for (let i = 0; i < std.length; i++){
                         let std_status = "";
-                        if (std[i]["fields"]["status"] === "True") {
+                        if (std[i]["fields"]["status"]) {
                             std_status = "Active";
                         } else {
                             std_status = "Inactive";

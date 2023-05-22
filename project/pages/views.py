@@ -60,13 +60,11 @@ def update_student_information(request):
 
                 elif request.POST.get('action') == 'update':  # update the student information
                     if request.POST.get('isSearch') == 'true':
-                        print('isSearch is true')
                         # serialize in new student object in json
                         ser_instance = serializers.serialize('json', [student, ])
                         # send to client side.
                         return JsonResponse({"std": ser_instance}, status=200)
 
-                    print('isSearch is false')
                     # else update student data
                     if request.POST.get('name'):
                         student.name = request.POST.get('name')
@@ -113,24 +111,21 @@ def change_student_status(request):
 
 
 def Assign_Department_Page(request):
-    student_id = request.POST.get('student-id')
-    department = request.POST.get('department-name')
+    if request.method == 'POST':
 
-    try:
-        student = Student.objects.get(idoCollage=student_id)
+        student_id = request.POST.get('student-id')
+        department = request.POST.get('department-name')
 
-        if student.level == 3:
-            student.department = department
+        try:
+            student = Student.objects.get(idoCollage=student_id)
+            student.department = department if department != 'None' else None
             student.save()
-            x = {'student_id': student_id, 'message': 'The account has been successfully updated.'}
-        else:
-            x = {'student_id': student_id, 'message': "You can't update the department for this student."}
+            return JsonResponse({'msg': 'The department has been assigned successfully.'}, status=200)
 
+        except Student.DoesNotExist:
+            return JsonResponse({'msg': 'No student with this ID'}, status=400)
 
-    except Student.DoesNotExist:
-        x = {'message': 'No student with this ID'}
-
-    return render(request, 'pages/Assign Department Page.html', x)
+    return render(request, 'pages/Assign Department Page.html')
 
 
 def Home(request):
@@ -183,6 +178,8 @@ def Search_For_Students(request):
                     ser_instance = serializers.serialize('json', students)
                     # send to client side.
                     return JsonResponse({"std": ser_instance}, status=200)
+                else:
+                    return JsonResponse({"msg": 'No students with this name.'}, status=400)
 
             except Student.DoesNotExist:
                 return JsonResponse({"msg": 'No students with this name.'}, status=400)

@@ -105,8 +105,8 @@ select {
 }
 
 
-
-button[type="button"] {
+#submit,
+button[type="submit"] {
     margin: 30px 50px;
     background-color:#45a049;
     color: #fff;
@@ -116,6 +116,7 @@ button[type="button"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s;
+    text-align: center;
 }
 
 button[type="button"]:hover {

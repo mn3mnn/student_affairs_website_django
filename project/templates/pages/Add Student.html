@@ -95,19 +95,19 @@
             return false;
         }
         if (document.getElementById("email").value.length > 0){
-            var email = document.getElementById("email").value;
-            var atpos = email.indexOf("@");
-            var dotpos = email.lastIndexOf(".");
+            let email = document.getElementById("email").value;
+            let atpos = email.indexOf("@");
+            let dotpos = email.lastIndexOf(".");
             if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
                 alert("Not a valid e-mail address");
                 return false;
             }
         }
         if (document.getElementById("dob").value.length > 0){
-            var today = new Date();
-            var birthDate = new Date(document.getElementById("dob").value);
-            var age = today.getFullYear() - birthDate.getFullYear();
-            var m = today.getMonth() - birthDate.getMonth();
+            let today = new Date();
+            let birthDate = new Date(document.getElementById("dob").value);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let m = today.getMonth() - birthDate.getMonth();
             if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
@@ -126,7 +126,6 @@
         }
         // serialize the data for sending the form data.
         let serializedData = $("#addStudentForm").serialize();
-        console.log(serializedData);
         // make POST ajax call
         $.ajax({
             method: 'POST',

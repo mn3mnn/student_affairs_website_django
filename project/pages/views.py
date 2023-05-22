@@ -1,19 +1,16 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Student
-from django.http import JsonResponse
-from django.contrib import messages
 from django.http import JsonResponse
 from django.core import serializers
 
 # Create your views here.
 
 
-def Add_Student(request):
+def add_student(request):
     if request.method == 'POST':
         try:
             name = request.POST.get('name')
-            idoCollage = request.POST.get('id')
+            id_of_college = request.POST.get('id')
             dob = request.POST.get('dob')
             gpa = request.POST.get('gpa')
             gender = request.POST.get('gender')
@@ -26,12 +23,12 @@ def Add_Student(request):
             found_object = None
 
             for obj in Student.objects.all():
-                if obj.idoCollage == idoCollage:
+                if obj.idoCollage == id_of_college:
                     found_object = obj
                     break
 
             if not found_object:
-                std = Student(name=name, idoCollage=idoCollage, level=level, department=department, gender=gender,
+                std = Student(name=name, idoCollage=id_of_college, level=level, department=department, gender=gender,
                               status=status, dob=dob, gpa=gpa, email=email,
                               mobile=mobile)
                 std.save()
@@ -94,9 +91,9 @@ def update_student_information(request):
 
 def change_student_status(request):
     if request.method == 'POST':
-        id_of_collage = request.POST.get('std_id')
-        if id_of_collage:
-            std = Student.objects.get(idoCollage=id_of_collage)
+        id_of_college = request.POST.get('std_id')
+        if id_of_college:
+            std = Student.objects.get(idoCollage=id_of_college)
             if std:
                 curr_status = std.status
                 std.status = not curr_status
@@ -110,7 +107,7 @@ def change_student_status(request):
     return render(request, 'pages/Change Student Status.html')
 
 
-def Assign_Department_Page(request):
+def assign_department(request):
     if request.method == 'POST':
 
         student_id = request.POST.get('student-id')
@@ -128,11 +125,11 @@ def Assign_Department_Page(request):
     return render(request, 'pages/Assign Department Page.html')
 
 
-def Home(request):
+def home(request):
     return render(request, 'pages/Home.html')
 
 
-def Inactive_Students_Page(request):
+def active_inactive_students(request):
     if request.method == 'POST':
         status = request.POST.get('status')
         students = None
@@ -153,7 +150,7 @@ def Inactive_Students_Page(request):
     return render(request, 'pages/Inactive Students Page.html')
 
 
-def Search_For_Students(request):
+def search_for_students(request):
     if request.method == 'POST':
         student_id = request.POST.get('id')
         student_name = request.POST.get('name')
@@ -187,7 +184,7 @@ def Search_For_Students(request):
     return render(request, 'pages/Search For Students.html')
 
 
-def View_All_Students(request):
+def view_all_students(request):
     students = Student.objects.all()
     context = {'students': students}
     return render(request, 'pages/View All Students.html', context)

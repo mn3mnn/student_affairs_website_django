@@ -57,7 +57,7 @@
             return false;
         }
         $.ajax({
-            url: "{% url 'Inactive Students Page' %}",
+            url: "{% url 'Active/Inactive Students' %}",
             type: "POST",
             data: {
                 'status': document.getElementById("status").value,

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search for Students</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/searchForStudents.css' %}">
+</head>
+<body>
+
+
+
+  <div class="container">
+    <h1>Search For Student</h1>
+  <main>
+    <form id="SearchForStudent" method="POST">
+      {% csrf_token %}
+      <div>
+        <label class="id">ID</label>
+        <br>
+        <input type="text" id="id" name="id" placeholder="Enter ID">
+      </div>
+        <br>
+        <p>OR</p>
+        <div>
+            <label class="name">Name</label>
+            <br>
+            <input type="text" id="name" name="name" placeholder="Enter Name">
+        </div>
+      <input id="Search" value="Search" onclick="searchForStudent()" style="margin: 30px 50px; background-color: #45a049; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#555'" onmouseout="this.style.backgroundColor='#45a049'">
+    </form>
+        <table id="std-table">
+          <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>GPA</th>
+            <th>BirthDate</th>
+            <th>Gender</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>Mobile</th>
+          </tr>
+        </table>
+  </main>
+  </div>
+
+</body>
+</html>
+
+
+<script>
+  
+    function validateForm() {
+        let x = document.forms["SearchForStudent"]["id"].value;
+        let y = document.forms["SearchForStudent"]["name"].value;
+        if (x === "" && y === "") {
+            alert("You must fill at least one field");
+            return false;
+        }
+        return true;
+    }
+
+    function searchForStudent() {
+        if (validateForm() === false) {
+            return false;
+        }
+        $.ajax({
+            url: "{% url 'searchForStudents' %}",
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'id': $('#id').val(),
+                'name': $('#name').val(),
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data["std"]) {
+                    if ($("#std-table").find("tr").length > 1) { // remove all rows except the first one
+                        $("#std-table").find("tr:gt(0)").remove();
+                    }
+
+                    let std = JSON.parse(data["std"]);
+                    for (let i = 0; i < std.length; i++){
+                        let std_status = "";
+                        if (std[i]["fields"]["status"]) {
+                            std_status = "Active";
+                        } else {
+                            std_status = "Inactive";
+                        }
+                        //$("#std-table").css("display", "block");
+                        $("#std-table").append("<tr>"+
+                                            "<td> <a href='student/"+std[i]["fields"]["collegeID"]+"'>"+std[i]["fields"]["name"] + "</a> </td>"+
+                                            "<td>"+std[i]["fields"]["collegeID"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["gpa"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["dob"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["gender"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["level"]+"</td>"+
+                                            "<td>"+ std_status +"</td>"+
+                                            "<td>"+std[i]["fields"]["email"]+"</td>"+
+                                            "<td>"+std[i]["fields"]["mobile"]+"</td>"+
+                                          "</tr>");
+                    }
+                }
+            },
+            error: function (data) {
+                alert(data["responseJSON"]["msg"]);
+            }
+        });
+    }
+    
+</script>
+
+{% endblock content %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Department</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/assignDepartmentPage.css' %}">
+</head>
+
+
+<body>
+
+<main>
+  <div class="container">
+    <h1>Enter Student ID and Department Information</h1>
+    <form id="assignDepForm" method="POST">
+      {% csrf_token %}
+      <label for="student-id">Student ID:</label>
+      <input type="text" id="student-id" name="student-id" placeholder="Enter Student ID" required>
+
+      
+      <label for="department-name">Department Name:</label>
+      <select name="department-name" id="department-name">
+        <option disabled selected>Select Department</option>
+        <option value="CS">CS</option>
+        <option value="IS">IS</option>
+        <option value="IT">IT</option>
+        <option value="AI">AI</option>
+        <option value="DS">DS</option>
+      </select>
+      <input id="submit" value="Assign Department" type="submit" style="margin: 30px 50px; background-color: #45a049; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#555'" onmouseout="this.style.backgroundColor='#45a049'">
+    </form>
+  </div>
+</main>
+
+
+<script>
+    function validateForm() {
+      let x = document.getElementById("student-id").value;
+      if (!x) {
+        alert("Student ID must be filled out");
+        return false;
+      }
+      return true;
+    }
+
+    $(document).ready(function(){
+       $("#assignDepForm").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+
+        if (!validateForm()) {
+          return;
+        }
+
+        $.ajax({
+          url: "{% url 'assignDepartmentPage' %}",
+          type: "POST",
+          data: $("#assignDepForm").serialize(),
+          success: function(response){
+            alert(response["msg"]);
+          },
+          error: function(error){
+            alert(error["responseJSON"]["msg"]);
+          }
+        })
+      })
+    })
+</script>
+  
+
+
+</body>
+</html>
+{% endblock content %}

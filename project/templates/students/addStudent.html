@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<html lang="En">
+<head>
+    <title>Add Student | Student Affairs Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/addStudent.css' %}">
+
+</head>
+
+<body>
+<div class="container">
+    <h1>Add New Student</h1>
+    <form id="addStudentForm" method="POST">
+        {% csrf_token %}
+
+          <label >ID</label>
+          <input type="text" maxlength="8" id="id" name="id" placeholder="Enter ID" required>
+
+
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter Name" required>
+
+
+          <label >Date of Birth</label>
+          <input type="date" id="dob" name="dob" >
+
+
+          <label >GPA</label>
+          <input type="text" maxlength="4" id="gpa" name="gpa" placeholder="Enter GPA">
+
+
+          <label >Gender</label>
+          <select id="gender" name="gender" required>
+            <option disabled selected>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+
+          <label >Level</label>
+          <input type="number" min="1" max="4" id="level" name="level" placeholder="Enter Level" required>
+
+          <label >Status</label>
+          <select id="status" name="status" required>
+            <option disabled selected>Select Status</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
+
+          <label >Department</label>
+          <select id="department" name="department">
+            <option disabled selected>Select Department</option>
+            <option value="CS">CS</option>
+            <option value="IS">IS</option>
+            <option value="IT">IT</option>
+            <option value="AI">AI</option>
+            <option value="DS">DS</option>
+          </select>
+
+          <label >Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter Email">
+
+          <label >Mobile Number</label>
+          <input type="tel" id="mobile" name="mobile" placeholder="Enter Mobile Number" required>
+
+        <input id="submit" onclick="addStudent()" value="Add Student">
+    </form>
+    
+</div>
+
+</body>
+</html>
+
+<script>
+
+    function validateForm(){
+        if (document.getElementById("id").value.length !== 8){
+            alert("ID must be 8 digits");
+            return false;
+        }
+        if (document.getElementById("gpa").value > 4 || document.getElementById("gpa").value < 0){
+            alert("GPA must be between 0 and 4");
+            return false;
+        }
+        if (document.getElementById("level").value > 4 || document.getElementById("level").value < 1){
+            alert("Level must be between 1 and 4");
+            return false;
+        }
+        if (document.getElementById("mobile").value.length !== 11){
+            alert("Mobile Number must be 11 digits");
+            return false;
+        }
+        if (document.getElementById("email").value.length > 0){
+            let email = document.getElementById("email").value;
+            let atpos = email.indexOf("@");
+            let dotpos = email.lastIndexOf(".");
+            if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+                alert("Not a valid e-mail address");
+                return false;
+            }
+        }
+        if (document.getElementById("dob").value.length > 0){
+            let today = new Date();
+            let birthDate = new Date(document.getElementById("dob").value);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            if (age < 18){
+                alert("Age must be 18 or above");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function addStudent(){
+        if (!validateForm()){
+            return;
+        }
+        // serialize the data for sending the form data.
+        let serializedData = $("#addStudentForm").serialize();
+        // make POST ajax call
+        $.ajax({
+            method: 'POST',
+            url: "{% url 'addStudent' %}",
+            data: serializedData,
+            success: function (response) {
+                // show alert for success
+                alert(response["msg"]);
+                // clear the form.
+                $("#addStudentForm").trigger('reset');
+            },
+            error: function (response) { // if status code is not 200
+                // alert the error if any error occurred
+                alert(response["responseJSON"]["msg"]);
+                {#$("#addStudentForm").trigger('reset');#}
+            }
+        });
+    }
+
+
+</script>
+
+
+
+{% endblock content %}

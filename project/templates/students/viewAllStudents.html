@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View All Students</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/viewAllStudents.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>View All Students</h1>
+    <main>
+        <table id="table1">
+            <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Student Department</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.collegeID }}</td>
+                    <td> <a href="student/{{ student.collegeID }}"> {{ student.name }} </a> </td>
+                    <td>{{ student.department }}</td>
+                    {% if student.status %}
+                        <td id="{{ student.collegeID }}status">Active</td>
+                        <td>
+                            {% csrf_token %}
+                            <input type="button" id="{{ student.collegeID }}btn" onclick="changeStdStatus({{ student.collegeID }})" class="inactive-btn" value="Make Inactive">
+                        </td>
+                    {% else %}
+                        <td id="{{ student.collegeID }}status">Inactive</td>
+                        <td>
+                            {% csrf_token %}
+                            <input type="button" id="{{ student.collegeID }}btn" onclick="changeStdStatus({{ student.collegeID }})" class="active-btn" value="Make Active">
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>
+
+
+<script>
+    
+</script>
+
+{% endblock content %}
+
+{% block javascript %}
+{#<script src="{% static 'js/viewAllStudents.js' %}"></script>#}
+<script>
+function changeStdStatus(std_id) {
+  let csrftoken = getCookie('csrftoken');
+
+  $.ajax({
+    type: "POST",
+    url: "{% url 'changeStudentStatus' %}",
+    data: {
+      std_id: std_id
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    },
+    success: function(response) {
+      console.log(response);
+        response["old_status"] = response["old_status"].charAt(0).toUpperCase() + response["old_status"].slice(1);
+        response["new_status"] = response["new_status"].charAt(0).toUpperCase() + response["new_status"].slice(1);
+      $("#" + std_id + "status").text(response["new_status"]);
+      $("#" + std_id + "btn").attr("class", response["old_status"] + "-btn").val("Make " + response["old_status"]);
+    },
+    error: function(response) {
+      console.log(response);
+    }
+  });
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    let cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+</script>
+{% endblock javascript %}
+

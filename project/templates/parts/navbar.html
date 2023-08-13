@@ -1,0 +1,17 @@
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/navBar.css'%}"/>
+
+<header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'addStudent' %}">Add Student</a></li>
+                <li><a href="{% url 'updateStudentInformation' %}">Update Student Info</a></li>
+                <li><a href="{% url 'searchForStudents' %}">Search for Students</a></li>
+                <li><a href="{% url 'viewAllStudents' %}">View All Students</a></li>
+                <li><a href="{% url 'assignDepartmentPage' %}">Assign Department</a></li>
+            </ul>
+        </nav>
+</header>

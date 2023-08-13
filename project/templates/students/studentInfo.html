@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} <title> Student Info </title> {% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/student.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h1>Name: {{ std.name }}</h1>
+    <h3>ID: {{ std.collegeID }} </h3>
+    <h3>GPA: {{ std.gpa }} </h3>
+    <h3>level: {{ std.level }} </h3>
+    <h3>Dep: {{ std.department }} </h3>
+    <h3>Date of birth: {{ std.dob }} </h3>
+    <h3>email: {{ std.email }} </h3>
+    <h3>phone: {{ std.mobile }} </h3>
+    </div>
+{% endblock %}

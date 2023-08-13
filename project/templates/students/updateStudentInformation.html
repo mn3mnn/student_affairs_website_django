@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<html>
+<head>
+  <title>Update Student | Student Affairs Website</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/addStudent.css' %}">
+</head>
+<body>
+
+
+<div class="container">
+  <h1>Update Student Information</h1>
+  <form id="updateStudentForm" method="POST">
+      {% csrf_token %}
+
+      <div class="ele">
+          <label for="id">ID</label>
+          <input type="text" id="id"  name="id" placeholder="Enter ID" required>
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter Name">
+      </div>
+
+      <div style = "display: none;" class="ele">
+        <label >Date of Birth</label>
+        <input type="date" id="dob"  name="dob">
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label >GPA</label>
+          <input type="text" id="gpa" name="gpa" placeholder="Enter GPA">
+      </div>
+
+      <div style = "display: none;" class="ele">
+      <label>Gender</label>
+          <select id="gender" name="gender">
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+          </select>
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label >Level</label>
+          <input id="level" type="number" max="4" min="1" name="level" placeholder="Enter Level">
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label>Status</label>
+          <select id="status" name="status">
+              <option value="">Select Status</option>
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+          </select>
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label class="department">Department</label>
+          <select id="department" id="department" name="department">
+            <option disabled selected>Select Department</option>
+                <option value="CS">CS</option>
+                <option value="IS">IS</option>
+                <option value="IT">IT</option>
+                <option value="AI">AI</option>
+                <option value="DS">DS</option>
+          </select>
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label class="email">Email</label>
+          <input id="email" type="email" name="email" placeholder="Enter Email">
+      </div>
+
+      <div style = "display: none;" class="ele">
+          <label >Mobile Number</label>
+          <input id="mobile" type="tel" name="mobile" placeholder="Enter Mobile Number" >
+      </div>
+
+      <input type="text" id="isSearch" name="isSearch" value="true" hidden>
+      <input type="text" id="action" name="action" value="update" hidden>
+
+      <div class="button">
+          <input type="submit" id="submit" name="action" value="Update Student" onclick="setActionVal('update')">
+          <input type="submit" id="delet"  name="action" value="Delete Student" onclick="setActionVal('delete')">
+      </div>
+  </form>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script>
+    function showDivs() {
+        let divs = document.getElementsByClassName("ele");
+        for (let i = 0; i < divs.length; i++) {
+            divs[i].style.display = "flex";
+        }
+    }
+    function setActionVal(action) {
+        $("#action").val(action);
+
+    }
+    /*
+        On submitting the form, send the POST ajax
+        request to server.
+    */
+    $("#updateStudentForm").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+        $("#id").prop("disabled", false); // enable the id field to be sent with the form data
+        // serialize the data for sending the form data.
+        let serializedData = $(this).serialize();
+        console.log(serializedData);
+        // make POST ajax call
+        $.ajax({
+            method: 'POST',
+            url: "{% url 'updateStudentInformation' %}",
+            data: serializedData,
+            success: function (response) {
+                // clear the form.
+                $("#updateStudentForm").trigger('reset');
+                $("#id").prop("disabled", true); // disable the id field to guarantee that it will not be changed
+                if (response["std"]){ // if the student is found
+                    showDivs(); // show the rest of form fields and fill them with the data
+                    $("#isSearch").val("false"); // set the isSearch value to false. to prevent searching again
+
+                    // set the values of the form fields
+                    let std = JSON.parse(response["std"]);
+                    $("#id").val(std[0]["fields"]["collegeID"]);
+                    $("#name").val(std[0]["fields"]["name"]);
+                    $("#dob").val(std[0]["fields"]["dob"]);
+                    $("#gpa").val(std[0]["fields"]["gpa"]);
+                    $("#level").val(std[0]["fields"]["level"]);
+                    $("#email").val(std[0]["fields"]["email"]);
+                    $("#mobile").val(std[0]["fields"]["mobile"]);
+                    $("#gender").val(std[0]["fields"]["gender"]);
+                    $("#department").val(std[0]["fields"]["department"]);
+                    if (std[0]["fields"]["status"]) {
+                        $("#status").val("1");
+                    }
+                    else {
+                        $("#status").val("0");
+                    }
+                }
+                else if (response["msg"]){ // else if the response has a msg. (student has been deleted or updated)
+                    alert(response["msg"]);
+                    location.reload();
+                }
+            },
+            error: function (response) { // if status code is not 200 (student not found)
+                // alert the error if any error occurred
+                console.log(response);
+                alert(response["responseJSON"]["msg"]);
+                $("#updateStudentForm").trigger('reset');
+            }
+        })
+    })
+</script>
+{% endblock javascript %}
+
+
+
+
